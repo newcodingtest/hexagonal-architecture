@@ -1,4 +1,4 @@
-package com.example.demo.post.controller;
+package com.example.demo.medium;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
