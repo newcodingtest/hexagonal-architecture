@@ -1,7 +1,5 @@
 package com.example.demo.user.controller;
 
-import com.example.demo.user.controller.port.UserService;
-import com.example.demo.user.controller.response.MyProfileResponse;
 import com.example.demo.user.domain.MyProfileResponse;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserUpdate;
