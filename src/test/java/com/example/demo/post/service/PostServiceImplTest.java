@@ -7,30 +7,23 @@ import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
-import com.example.demo.user.service.CertificationService;
-import com.example.demo.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 
-public class PostServiceTest {
+public class PostServiceImplTest {
 
-    private PostService postService;
+    private PostServiceImpl postServiceImpl;
 
     @BeforeEach
     void init(){
         FakePostRepository fakePostRepository = new FakePostRepository();
         FakeUserRepository fakeUserRepository = new FakeUserRepository();
 
-        this.postService = PostService.builder()
+        this.postServiceImpl = PostServiceImpl.builder()
                 .postRepository(fakePostRepository)
                 .userRepository(fakeUserRepository)
                 .clockHolder(new TestClockHolder(1678530673958L))
@@ -73,7 +66,7 @@ public class PostServiceTest {
     @Test
     void getById는_존재하는_게시물을_가져온다(){
         //given
-        Post result = postService.getById(1);
+        Post result = postServiceImpl.getById(1);
 
         //when
 
@@ -91,7 +84,7 @@ public class PostServiceTest {
                 .build();
 
         //when
-        Post result = postService.create(postCreate);
+        Post result = postServiceImpl.create(postCreate);
 
         //then
         assertThat(result.getId()).isNotNull();
@@ -107,10 +100,10 @@ public class PostServiceTest {
                 .build();
 
         //when
-        postService.update(1,postUpdate);
+        postServiceImpl.update(1,postUpdate);
 
         //then
-        Post result = postService.getById(1);
+        Post result = postServiceImpl.getById(1);
         assertThat(result.getContent()).isEqualTo("helloworld");
         assertThat(result.getModifiedAt()).isEqualTo(1678530673958L);
     }

@@ -1,31 +1,24 @@
 package com.example.demo.user.service;
 
-import com.example.demo.common.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.exception.ResourceNotFoundException;
 import com.example.demo.common.service.port.ClockHolder;
 import com.example.demo.common.service.port.UuidHolder;
+import com.example.demo.user.controller.port.*;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserUpdate;
-import com.example.demo.user.infrastructure.UserEntity;
-import com.example.demo.user.infrastructure.UserJpaRepository;
-import java.time.Clock;
-import java.util.Optional;
-import java.util.UUID;
 
 import com.example.demo.user.service.port.UserRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Builder
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserCreateService, UserReadService, UserUpdateService, AuthenticationService {
 
     private final UserRepository userRepository;
     private final CertificationService certificationService;
@@ -51,7 +44,7 @@ public class UserService {
     public User create(UserCreate userCreate) {
         User user = User.from(userCreate,uuidHolder);
         user = userRepository.save(user);
-        certificationService.send(userCreate.getEmail(),user.getId(), user.getCertificationCode());
+        certificationServiceImpl.send(userCreate.getEmail(),user.getId(), user.getCertificationCode());
         return user;
     }
 

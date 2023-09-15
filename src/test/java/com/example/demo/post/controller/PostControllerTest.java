@@ -1,7 +1,5 @@
-package com.example.demo.medium;
+package com.example.demo.post.controller;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import com.example.demo.common.exception.ResourceNotFoundException;
 import com.example.demo.mock.TestContainer;
 import com.example.demo.post.controller.response.PostResponse;
@@ -13,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
 public class PostControllerTest {
 
     @Test
@@ -22,9 +23,9 @@ public class PostControllerTest {
                 .build();
         User user = User.builder()
                 .id(1L)
-                .email("pulpul8282@naver.com")
-                .nickname("pulpul8282")
-                .address("seoul")
+                .email("kok202@naver.com")
+                .nickname("kok202")
+                .address("Seoul")
                 .status(UserStatus.ACTIVE)
                 .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
                 .lastLoginAt(100L)
@@ -44,7 +45,7 @@ public class PostControllerTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
         assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().getContent()).isEqualTo("helloworld");
-        assertThat(result.getBody().getWriter().getNickname()).isEqualTo("pulpul8282");
+        assertThat(result.getBody().getWriter().getNickname()).isEqualTo("kok202");
         assertThat(result.getBody().getCreatedAt()).isEqualTo(100L);
     }
 
@@ -69,9 +70,9 @@ public class PostControllerTest {
                 .build();
         User user = User.builder()
                 .id(1L)
-                .email("pulpul8282@naver.com")
-                .nickname("pulpul8282")
-                .address("seoul")
+                .email("kok202@naver.com")
+                .nickname("kok202")
+                .address("Seoul")
                 .status(UserStatus.ACTIVE)
                 .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
                 .lastLoginAt(100L)
@@ -93,7 +94,7 @@ public class PostControllerTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
         assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().getContent()).isEqualTo("foobar");
-        assertThat(result.getBody().getWriter().getNickname()).isEqualTo("pulpul8282");
+        assertThat(result.getBody().getWriter().getNickname()).isEqualTo("kok202");
         assertThat(result.getBody().getCreatedAt()).isEqualTo(100L);
         assertThat(result.getBody().getModifiedAt()).isEqualTo(200L);
     }
