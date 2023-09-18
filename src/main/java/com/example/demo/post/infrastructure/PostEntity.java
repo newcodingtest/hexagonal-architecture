@@ -1,7 +1,6 @@
 package com.example.demo.post.infrastructure;
 
 import com.example.demo.post.domain.Post;
-import com.example.demo.user.domain.User;
 import com.example.demo.user.infrastructure.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -2,6 +2,7 @@ package com.example.demo.medium;
 
 import com.example.demo.common.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.exception.ResourceNotFoundException;
+import com.example.demo.user.controller.port.UserService;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
@@ -23,7 +24,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
-@TestPropertySource("classpath:test-application-properties")
+@TestPropertySource("classpath:/application-test.properties")
 @SqlGroup({
         @Sql(value = "/sql/user-service-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -31,7 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 public class UserServiceImplTest {
 
     @Autowired
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
     @MockBean
     private JavaMailSender mailSender;
 
@@ -41,7 +42,7 @@ public class UserServiceImplTest {
         String email = "pulpul8282@naver.com";
 
         //when
-        User result = userServiceImpl.getByEmail(email);
+        User result = userService.getByEmail(email);
 
         //then
         assertThat(result.getNickname()).isEqualTo("pulpul8282");
@@ -50,12 +51,12 @@ public class UserServiceImplTest {
     @Test
     void getByEmail은_PENDING_상태인_유저는_찾아올_수_없다(){
         //given
-        String email = "pulpul8282@naver.com";
+        String email = "pulpul9292@naver.com";
 
         //when
         //then
         assertThatThrownBy(() -> {
-            userServiceImpl.getByEmail(email);
+            userService.getByEmail(email);
         }).isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -63,7 +64,7 @@ public class UserServiceImplTest {
     void getById은_ACTIVE_상태인_유저는_찾아올_수_있다(){
         //given
         //when
-        User result = userServiceImpl.getById(1);
+        User result = userService.getById(1);
 
         //then
         assertThat(result.getNickname()).isEqualTo("pulpul8282");
@@ -75,7 +76,7 @@ public class UserServiceImplTest {
         //when
         //then
         assertThatThrownBy(() -> {
-            userServiceImpl.getById(2);
+            userService.getById(2);
         }).isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -90,7 +91,7 @@ public class UserServiceImplTest {
         BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class));
 
         //when
-        User result = userServiceImpl.create(userCreate);
+        User result = userService.create(userCreate);
 
         //then
         assertThat(result.getId()).isNotNull();
@@ -106,23 +107,23 @@ public class UserServiceImplTest {
                 .build();
 
         //when
-        userServiceImpl.update(1,userUpdate);
+        userService.update(1,userUpdate);
 
         //then
-        User result = userServiceImpl.getById(1);
+        User result = userService.getById(1);
         assertThat(result.getId()).isNotNull();
         assertThat(result.getAddress()).isEqualTo("seoul");
-        assertThat(result.getAddress()).isEqualTo("pulpul8282-u");
+        assertThat(result.getNickname()).isEqualTo("pulpul8282-u");
     }
 
     @Test
     void user를_로그인_시키면_마지막_로그인_시간이_변경된다(){
         //given
         //when
-        userServiceImpl.login(1);
+        userService.login(1);
 
         //then
-        User result = userServiceImpl.getById(1);
+        User result = userService.getById(1);
         assertThat(result.getLastLoginAt()).isGreaterThan(0L);
     }
 
@@ -130,10 +131,10 @@ public class UserServiceImplTest {
     void PENDING_상태의_사용자는_인증_코드로_ACTIVE_시킬_수_있다(){
         //given
         //when
-        userServiceImpl.verifyEmail(2,"aaaa-a-a-a-aaab");
+        userService.verifyEmail(2,"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
 
         //then
-        User result = userServiceImpl.getById(1);
+        User result = userService.getById(1);
         assertThat(result.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
@@ -143,7 +144,7 @@ public class UserServiceImplTest {
         //when
         //then
         assertThatThrownBy(() -> {
-            userServiceImpl.verifyEmail(2,"aaaa-a-a-a-aaab");
+            userService.verifyEmail(2,"aaaa-a-a-a-aaab");
         }).isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 

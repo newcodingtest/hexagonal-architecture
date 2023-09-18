@@ -11,7 +11,7 @@ public class CertificationServiceImplTest {
     public void 이메일과_컨텐츠가_제대로_만들어져_보내진다(){
         //given
         FakeMailSender fakeMailSender = new FakeMailSender();
-        CertificationServiceImpl certificationServiceImpl = new CertificationServiceImpl(fakeMailSender);
+        CertificationService certificationServiceImpl = new CertificationService(fakeMailSender);
 
         //when
         certificationServiceImpl.send("pulpul8282@naver.com",1,"aaaaaaa-aa-aa-aa-aaaaaa");

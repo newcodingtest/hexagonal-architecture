@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Builder
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserCreateService, UserReadService, UserUpdateService, AuthenticationService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CertificationService certificationService;
@@ -35,23 +35,18 @@ public class UserServiceImpl implements UserCreateService, UserReadService, User
             .orElseThrow(() -> new ResourceNotFoundException("Users", email));
     }
 
-    public User getByIdOrElseThrow(long id) {
-        return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
-            .orElseThrow(() -> new ResourceNotFoundException("Users", id));
-    }
-
     @Transactional
     public User create(UserCreate userCreate) {
         User user = User.from(userCreate,uuidHolder);
         user = userRepository.save(user);
-        certificationServiceImpl.send(userCreate.getEmail(),user.getId(), user.getCertificationCode());
+        certificationService.send(userCreate.getEmail(),user.getId(), user.getCertificationCode());
         return user;
     }
 
     @Transactional
     public User update(long id, UserUpdate userUpdate) {
-        User user = getByIdOrElseThrow(id);
-        user.update(userUpdate);
+        User user = getById(id);
+        user=user.update(userUpdate);
         user = userRepository.save(user);
         return user;
     }
@@ -59,7 +54,7 @@ public class UserServiceImpl implements UserCreateService, UserReadService, User
     @Transactional
     public void login(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
-        user.login(clockHolder);
+        user = user.login(clockHolder);
         userRepository.save(user);
     }
 

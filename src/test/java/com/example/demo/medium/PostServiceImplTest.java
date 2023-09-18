@@ -1,6 +1,7 @@
 package com.example.demo.medium;
 
 
+import com.example.demo.post.controller.port.PostService;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
@@ -15,7 +16,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 @SpringBootTest
-@TestPropertySource("classpath:test-application-properties")
+@TestPropertySource("classpath:/application-test.properties")
 @SqlGroup({
         @Sql(value = "/sql/post-service-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -23,12 +24,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class PostServiceImplTest {
 
     @Autowired
-    private PostServiceImpl postServiceImpl;
+    private PostService postService;
 
     @Test
     void getById는_존재하는_게시물을_가져온다(){
         //given
-        Post result = postServiceImpl.getById(1);
+        Post result = postService.getById(1);
 
         //when
 
@@ -46,7 +47,7 @@ public class PostServiceImplTest {
                 .build();
 
         //when
-        Post result = postServiceImpl.create(postCreate);
+        Post result = postService.create(postCreate);
 
         //then
         assertThat(result.getId()).isNotNull();
@@ -62,10 +63,10 @@ public class PostServiceImplTest {
                 .build();
 
         //when
-        postServiceImpl.update(1,postUpdate);
+        postService.update(1,postUpdate);
 
         //then
-        Post result = postServiceImpl.getById(1);
+        Post result = postService.getById(1);
         assertThat(result.getContent()).isEqualTo("helloworld");
         assertThat(result.getModifiedAt()).isGreaterThan(0);
     }

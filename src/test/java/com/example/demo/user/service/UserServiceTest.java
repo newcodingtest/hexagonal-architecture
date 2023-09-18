@@ -6,6 +6,7 @@ import com.example.demo.mock.FakeMailSender;
 import com.example.demo.mock.FakeUserRepository;
 import com.example.demo.mock.TestClockHolder;
 import com.example.demo.mock.TestUuidHolder;
+import com.example.demo.user.controller.port.UserService;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserCreate;
 import com.example.demo.user.domain.UserStatus;
@@ -17,19 +18,19 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 
-public class UserServiceImplTest {
+public class UserServiceTest {
 
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
 
     @BeforeEach
     void init(){
         FakeMailSender fakeMailSender = new FakeMailSender();
         FakeUserRepository fakeUserRepository = new FakeUserRepository();
-        this.userServiceImpl = UserServiceImpl.builder()
+        this.userService = UserServiceImpl.builder()
                 .uuidHolder(new TestUuidHolder("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"))
                 .clockHolder(new TestClockHolder(1679530673958L))
-                .userRepository(new FakeUserRepository())
-                .certificationService(new CertificationServiceImpl(fakeMailSender))
+                .userRepository(fakeUserRepository)
+                .certificationService(new CertificationService(fakeMailSender))
                 .build();
         fakeUserRepository.save(User
                 .builder()
@@ -37,14 +38,14 @@ public class UserServiceImplTest {
                 .email("pulpul8282@naver.com")
                 .nickname("pulpul8282")
                 .address("seoul")
-                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
+                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
                 .status(UserStatus.ACTIVE)
                 .lastLoginAt(0L)
                 .build());
 
         fakeUserRepository.save(User
                 .builder()
-                .id(1L)
+                .id(2L)
                 .email("pulpul9292@naver.com")
                 .nickname("pulpul9292")
                 .address("seoul")
@@ -60,7 +61,7 @@ public class UserServiceImplTest {
         String email = "pulpul8282@naver.com";
 
         //when
-        User result = userServiceImpl.getByEmail(email);
+        User result = userService.getByEmail(email);
 
         //then
         assertThat(result.getNickname()).isEqualTo("pulpul8282");
@@ -69,12 +70,12 @@ public class UserServiceImplTest {
     @Test
     void getByEmail은_PENDING_상태인_유저는_찾아올_수_없다(){
         //given
-        String email = "pulpul8282@naver.com";
+        String email = "pulpul9292@naver.com";
 
         //when
         //then
         assertThatThrownBy(() -> {
-            userServiceImpl.getByEmail(email);
+            userService.getByEmail(email);
         }).isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -82,7 +83,7 @@ public class UserServiceImplTest {
     void getById은_ACTIVE_상태인_유저는_찾아올_수_있다(){
         //given
         //when
-        User result = userServiceImpl.getById(1);
+        User result = userService.getById(1);
 
         //then
         assertThat(result.getNickname()).isEqualTo("pulpul8282");
@@ -94,7 +95,7 @@ public class UserServiceImplTest {
         //when
         //then
         assertThatThrownBy(() -> {
-            userServiceImpl.getById(2);
+            userService.getById(2);
         }).isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -108,7 +109,7 @@ public class UserServiceImplTest {
                 .build();
 
         //when
-        User result = userServiceImpl.create(userCreate);
+        User result = userService.create(userCreate);
 
         //then
         assertThat(result.getId()).isNotNull();
@@ -126,23 +127,23 @@ public class UserServiceImplTest {
                 .build();
 
         //when
-        userServiceImpl.update(1,userUpdate);
+        userService.update(1,userUpdate);
 
         //then
-        User result = userServiceImpl.getById(1);
+        User result = userService.getById(1);
         assertThat(result.getId()).isNotNull();
         assertThat(result.getAddress()).isEqualTo("seoul");
-        assertThat(result.getAddress()).isEqualTo("pulpul8282-u");
+        assertThat(result.getNickname()).isEqualTo("pulpul8282-u");
     }
 
     @Test
     void user를_로그인_시키면_마지막_로그인_시간이_변경된다(){
         //given
         //when
-        userServiceImpl.login(1);
+        userService.login(1);
 
         //then
-        User result = userServiceImpl.getById(1);
+        User result = userService.getById(1);
         assertThat(result.getLastLoginAt()).isEqualTo(1679530673958L);
     }
 
@@ -150,10 +151,10 @@ public class UserServiceImplTest {
     void PENDING_상태의_사용자는_인증_코드로_ACTIVE_시킬_수_있다(){
         //given
         //when
-        userServiceImpl.verifyEmail(2,"aaaa-a-a-a-aaab");
+        userService.verifyEmail(2,"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
 
         //then
-        User result = userServiceImpl.getById(1);
+        User result = userService.getById(1);
         assertThat(result.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
@@ -163,7 +164,7 @@ public class UserServiceImplTest {
         //when
         //then
         assertThatThrownBy(() -> {
-            userServiceImpl.verifyEmail(2,"aaaa-a-a-a-aaab");
+            userService.verifyEmail(2,"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa");
         }).isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 

@@ -11,6 +11,6 @@ public class TestUuidHolder implements UuidHolder {
 
     @Override
     public String random() {
-        return null;
+        return uuid;
     }
 }

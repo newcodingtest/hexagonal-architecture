@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest(showSql = true)
-@TestPropertySource("classpath:test-application.properties")
+@TestPropertySource("classpath:/application-test.properties")
 @Sql("/sql/user-repository-test-data.sql")
 public class UserJpaRepositoryTest {
 

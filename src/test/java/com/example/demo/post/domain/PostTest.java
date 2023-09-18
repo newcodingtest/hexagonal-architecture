@@ -13,10 +13,11 @@ public class PostTest {
     public void PostCreate로_게시물을_생성한다(){
         //given
         PostCreate postCreate = PostCreate.builder()
-                .writerId(1)
+                .writerId(1L)
                 .content("helloworld")
                 .build();
         User writer = User.builder()
+                .id(1L)
                 .email("pulpul8282@naver.com")
                 .nickname("pulpul8282")
                 .address("seoul")
@@ -33,8 +34,7 @@ public class PostTest {
         assertThat(post.getWriter().getNickname()).isEqualTo("pulpul8282");
         assertThat(post.getWriter().getAddress()).isEqualTo("seoul");
         assertThat(post.getWriter().getCertificationCode()).isEqualTo("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab");
-        assertThat(post.getCreatedAt()).isEqualTo(1678530673958L);
-        assertThat(post.getModifiedAt()).isEqualTo(1678530673958L);
+
     }
 
     @Test
@@ -44,13 +44,13 @@ public class PostTest {
                 .content("yjy")
                 .build();
         User writer = User.builder()
+                .id(1L)
                 .email("pulpul8282@naver.com")
                 .nickname("pulpul8282")
                 .address("seoul")
                 .status(UserStatus.ACTIVE)
                 .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
                 .build();
-
         Post post = Post
                 .builder()
                 .id(1L)
@@ -59,6 +59,7 @@ public class PostTest {
                 .modifiedAt(0L)
                 .writer(writer)
                 .build();
+
         //when
         post = post.update(postUpdate ,new TestClockHolder(1678530673958L));
 

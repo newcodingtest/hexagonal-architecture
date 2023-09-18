@@ -46,8 +46,8 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.email").value("kok202@naver.com"))
-                .andExpect(jsonPath("$.nickname").value("kok202"))
+                .andExpect(jsonPath("$.email").value("pulpul8282@naver.com"))
+                .andExpect(jsonPath("$.nickname").value("pulpul8282"))
                 .andExpect(jsonPath("$.address").doesNotExist())
                 .andExpect(jsonPath("$.status").value("ACTIVE"));
     }
@@ -59,7 +59,7 @@ public class UserControllerTest {
         // then
         mockMvc.perform(get("/api/users/123456789"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Users에서 ID 123456789를 찾을 수 없습니다."));
+                .andExpect(content().string("User에서 ID 123456789를 찾을 수 없습니다."));
     }
 
     @Test

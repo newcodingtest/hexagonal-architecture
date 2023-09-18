@@ -52,8 +52,8 @@ public class UserTest {
 
         //then
         assertThat(user.getId()).isEqualTo(1L);
-        assertThat(user.getEmail()).isEqualTo("pulpul8282@naver.com1");
-        assertThat(user.getAddress()).isEqualTo("seoul");
+        assertThat(user.getEmail()).isEqualTo("pulpul8282@naver.com");
+        assertThat(user.getAddress()).isEqualTo("pangyo");
         assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
         assertThat(user.getLastLoginAt()).isEqualTo(100L);
         assertThat(user.getNickname()).isEqualTo("pulpul8282-n");
@@ -73,7 +73,7 @@ public class UserTest {
                 .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
                 .build();
         //when
-        user.login(new TestClockHolder(1678594512345L));
+        user = user.login(new TestClockHolder(1678594512345L));
 
         //then
         assertThat(user.getLastLoginAt()).isEqualTo(1678594512345L);

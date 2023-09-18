@@ -25,19 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MyInfoController {
 
-    private final UserCreateService userCreateService;
-    private final UserReadService userReadService;
-    private final UserUpdateService userUpdateService;
-    private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     @GetMapping("/me")
     public ResponseEntity<MyProfileResponse> get(
             @Parameter(name = "EMAIL", in = ParameterIn.HEADER)
             @RequestHeader("EMAIL") String email // 일반적으로 스프링 시큐리티를 사용한다면 UserPrincipal 에서 가져옵니다.
     ) {
-        User user = userReadService.getByEmail(email);
-        authenticationService.login(user.getId());
-        user = userReadService.getByEmail(email);
+        User user = userService.getByEmail(email);
+        userService.login(user.getId());
+        user = userService.getByEmail(email);
         return ResponseEntity
                 .ok()
                 .body(MyProfileResponse.from(user));
@@ -50,8 +47,8 @@ public class MyInfoController {
             @RequestHeader("EMAIL") String email, // 일반적으로 스프링 시큐리티를 사용한다면 UserPrincipal 에서 가져옵니다.
             @RequestBody UserUpdate userUpdate
     ) {
-        User user = userReadService.getByEmail(email);
-        user = userUpdateService.update(user.getId(), userUpdate);
+        User user = userService.getByEmail(email);
+        user = userService.update(user.getId(), userUpdate);
         return ResponseEntity
                 .ok()
                 .body(MyProfileResponse.from(user));

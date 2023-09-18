@@ -21,9 +21,9 @@ public class PostCreateControllerTest {
                 .build();
         testContainer.userRepository.save(User.builder()
                 .id(1L)
-                .email("kok202@naver.com")
-                .nickname("kok202")
-                .address("Seoul")
+                .email("pulpul8282@naver.com")
+                .nickname("pulpul8282")
+                .address("seoul")
                 .status(UserStatus.ACTIVE)
                 .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab")
                 .lastLoginAt(100L)
@@ -40,7 +40,7 @@ public class PostCreateControllerTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
         assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().getContent()).isEqualTo("helloworld");
-        assertThat(result.getBody().getWriter().getNickname()).isEqualTo("kok202");
+        assertThat(result.getBody().getWriter().getNickname()).isEqualTo("pulpul8282");
         assertThat(result.getBody().getCreatedAt()).isEqualTo(1679530673958L);
     }
 }

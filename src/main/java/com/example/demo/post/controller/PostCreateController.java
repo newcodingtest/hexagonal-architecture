@@ -1,5 +1,6 @@
 package com.example.demo.post.controller;
 
+import com.example.demo.post.controller.port.PostService;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.controller.response.PostResponse;
 import com.example.demo.post.service.PostServiceImpl;
@@ -20,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PostCreateController {
 
-    private final PostServiceImpl postServiceImpl;
+    private final PostService postService;
 
     @PostMapping
     public ResponseEntity<PostResponse> create(@RequestBody PostCreate postCreateDto) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(PostResponse.from(postServiceImpl.create(postCreateDto)));
+            .body(PostResponse.from(postService.create(postCreateDto)));
     }
 }

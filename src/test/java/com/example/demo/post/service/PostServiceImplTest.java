@@ -16,14 +16,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class PostServiceImplTest {
 
-    private PostServiceImpl postServiceImpl;
+    private PostServiceImpl postService;
 
     @BeforeEach
     void init(){
         FakePostRepository fakePostRepository = new FakePostRepository();
         FakeUserRepository fakeUserRepository = new FakeUserRepository();
 
-        this.postServiceImpl = PostServiceImpl.builder()
+        this.postService = PostServiceImpl.builder()
                 .postRepository(fakePostRepository)
                 .userRepository(fakeUserRepository)
                 .clockHolder(new TestClockHolder(1678530673958L))
@@ -66,7 +66,7 @@ public class PostServiceImplTest {
     @Test
     void getById는_존재하는_게시물을_가져온다(){
         //given
-        Post result = postServiceImpl.getById(1);
+        Post result = postService.getById(1);
 
         //when
 
@@ -79,12 +79,12 @@ public class PostServiceImplTest {
     void postCreateDto를_이용하여_게시물을_생성할_수_있다(){
         //given
         PostCreate postCreate = PostCreate.builder()
-                .writerId(1)
+                .writerId(1L)
                 .content("test")
                 .build();
 
         //when
-        Post result = postServiceImpl.create(postCreate);
+        Post result = postService.create(postCreate);
 
         //then
         assertThat(result.getId()).isNotNull();
@@ -100,10 +100,10 @@ public class PostServiceImplTest {
                 .build();
 
         //when
-        postServiceImpl.update(1,postUpdate);
+        postService.update(1,postUpdate);
 
         //then
-        Post result = postServiceImpl.getById(1);
+        Post result = postService.getById(1);
         assertThat(result.getContent()).isEqualTo("helloworld");
         assertThat(result.getModifiedAt()).isEqualTo(1678530673958L);
     }

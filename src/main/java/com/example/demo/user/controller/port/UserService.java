@@ -8,7 +8,6 @@ public interface UserService {
 
     User getById(long id);
     User getByEmail(String email);
-    User getByIdOrElseThrow(long id);
     User create(UserCreate userCreate);
     User update(long id, UserUpdate userUpdate);
     void login(long id);

@@ -31,6 +31,6 @@ public class UserResponseTest {
         assertThat(myProfileResponse.getNickname()).isEqualTo("pulpul8282");
         assertThat(myProfileResponse.getAddress()).isEqualTo("seoul");
         assertThat(myProfileResponse.getStatus()).isEqualTo(UserStatus.ACTIVE);
-        assertThat(myProfileResponse.getLastLoginAt()).isGreaterThan(100L);
+        assertThat(myProfileResponse.getLastLoginAt()).isEqualTo(100L);
     }
 }
